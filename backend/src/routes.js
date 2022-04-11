@@ -1,8 +1,22 @@
 import express from "express";
 import { io } from "./app";
 import { Message } from "./models/Message";
+import { User } from "./models/User";
 
 const router = express.Router();
+
+router.get("/user", async (req, res) => {
+    const allUsers = await User.find({});
+    res.send(allUsers);
+});
+
+router.post("/user", async (req, res) => {
+    const _id = req.body.userId;
+    const userData = { username: req.body.username };
+    const user = _id ? await User.findOneAndUpdate({ _id }, userData) : await User.create(userData);
+    res.send(user);
+    io.emit("userChanged", user);
+});
 
 router.get("/message", async (req, res) => {
     const messages = await Message.find({});

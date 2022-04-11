@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const MessageSchema = new mongoose.Schema(
     {
-        userId: Number,
+        userId: String,
         text: String,
         think: Boolean
     },

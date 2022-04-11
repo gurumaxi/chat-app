@@ -56,7 +56,13 @@
         padding: 8px;
         border-radius: 5px;
 
-        &.think {
+        .username {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--secondaryColor);
+        }
+
+        .text.think {
             color: #686868;
             font-style: italic;
         }
