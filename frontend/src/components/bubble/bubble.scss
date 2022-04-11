@@ -1,0 +1,55 @@
+.bubble-container {
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+
+    &.other-message {
+        justify-content: flex-start;
+
+        .bubble {
+            background-color: var(--bubbleGrey);
+
+            &:before {
+                content: "";
+                width: 0px;
+                height: 0px;
+                position: absolute;
+                border-left: 7px solid transparent;
+                border-right: 7px solid var(--bubbleGrey);
+                border-top: 7px solid var(--bubbleGrey);
+                border-bottom: 7px solid transparent;
+                left: -14px;
+                top: 6px;
+            }
+        }
+    }
+
+    &.my-message {
+        justify-content: flex-end;
+
+        .bubble {
+            background-color: var(--bubbleGreen);
+
+            &:before {
+                content: "";
+                width: 0px;
+                height: 0px;
+                position: absolute;
+                border-left: 7px solid var(--bubbleGreen);
+                border-right: 7px solid transparent;
+                border-top: 7px solid var(--bubbleGreen);
+                border-bottom: 7px solid transparent;
+                right: -14px;
+                top: 6px;
+            }
+        }
+    }
+
+    .bubble {
+        padding: 8px;
+        border-radius: 5px;
+    }
+}

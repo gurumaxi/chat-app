@@ -1,18 +1,24 @@
-import logo from "./logo.svg";
-import "./App.css";
+import { Bubble } from "./components/bubble/bubble";
+import { Header } from "./components/header/header";
 
 function App() {
+    const currentUser = 1;
+    const messages = [
+        { user: 1, text: "Hi user 2" },
+        { user: 2, text: "Howdy" },
+        { user: 2, text: "How are you doing?" },
+        { user: 1, text: "I am fine thanks." },
+        { user: 2, text: "Let's do something today" }
+    ];
+
     return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                    Learn React
-                </a>
-            </header>
+            <Header />
+            <main>
+                {messages.map((message, index) => (
+                    <Bubble message={message} currentUser={currentUser} key={index} />
+                ))}
+            </main>
         </div>
     );
 }
