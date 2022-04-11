@@ -6,8 +6,8 @@ services:
     image: mongo:latest
     container_name: mongo_db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=1234
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
     ports:
       - 27017:27017
     volumes:
@@ -18,10 +18,10 @@ services:
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongo_db
       - ME_CONFIG_MONGODB_PORT=27017
-      - ME_CONFIG_MONGODB_AUTH_USERNAME=root
-      - ME_CONFIG_MONGODB_AUTH_PASSWORD=1234
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=1234
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=${DB_USERNAME}
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=${DB_PASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${DB_ADMIN_USERNAME}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${DB_ADMIN_PASSWORD}
     depends_on:
       - mongo_db
     ports:
@@ -36,6 +36,7 @@ services:
     ports:
       - "8000:8000"
       - "8001:8001"
+    env_file: .env
     environment:
       - NODE_ENV=development
       - DEBUG=nodejs-docker-express:*

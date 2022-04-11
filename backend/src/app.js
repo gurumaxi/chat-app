@@ -11,9 +11,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 // db config
-const dbString = "mongodb://mongo_db:27017";
-mongoose.connect(dbString, { useNewUrlParser: true, user: "root", pass: "1234" });
-mongoose.connection.once("open", () => console.log("connected successfully to mongodb"));
+mongoose.connect("mongodb://mongo_db:27017", {
+    useNewUrlParser: true,
+    user: process.env.DB_USERNAME,
+    pass: process.env.DB_PASSWORD
+});
 
 // socket io
 const io = new Server(8001, { cors: { origin: "http://localhost:3000" } });
