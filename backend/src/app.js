@@ -18,7 +18,7 @@ mongoose.connect("mongodb://mongo_db:27017", {
 });
 
 // socket io
-const io = new Server(8001, { cors: { origin: "http://localhost:3000" } });
+export const io = new Server(8001, { cors: { origin: "http://localhost:3000" } });
 io.on("connection", socket => {
     console.log("connected to socket");
     socket.emit("hello", "world");

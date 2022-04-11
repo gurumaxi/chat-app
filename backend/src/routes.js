@@ -1,4 +1,5 @@
 import express from "express";
+import { io } from "./app";
 import { Message } from "./models/Message";
 
 const router = express.Router();
@@ -13,7 +14,7 @@ router.post("/message", async (req, res) => {
         let message = new Message(req.body);
         await message.save();
         res.send(message);
-        // io.emit("new-message", req.body);
+        io.emit("newMessage", message);
     } catch (error) {
         res.sendStatus(500);
         console.error(error);

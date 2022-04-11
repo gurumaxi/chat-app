@@ -13,6 +13,8 @@ function App() {
         getMessages().then(messages => setAllMessages(messages));
     }, []);
 
+    socket.on("newMessage", addNewMessage);
+
     function sendMessage() {
         socket.emit("howdy", "test1234");
         if (messageText.length) {
@@ -56,7 +58,15 @@ function App() {
                 ))}
             </main>
             <div className="input-container">
-                <input value={messageText} onChange={event => setMessageText(event.target.value)} />
+                <input
+                    value={messageText}
+                    onChange={event => setMessageText(event.target.value)}
+                    onKeyPress={event => {
+                        if (event.key === "Enter") {
+                            sendMessage();
+                        }
+                    }}
+                />
                 <button className="send-button icon" onClick={sendMessage}>
                     send
                 </button>
