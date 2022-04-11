@@ -15,8 +15,7 @@ function App() {
 
     socket.on("newMessage", addNewMessage);
 
-    function sendMessage() {
-        socket.emit("howdy", "test1234");
+    function onSubmit() {
         if (messageText.length) {
             const [firstWord, ...otherWords] = messageText.trim().split(" ");
             switch (firstWord) {
@@ -24,25 +23,30 @@ function App() {
                     // TODO: change nick name
                     break;
                 case "/think":
-                    // TODO: change text color
+                    sendMessage(otherWords.join(), true);
                     break;
                 case "/oops":
                     // TODO: remove last message
                     break;
                 default:
-                    const newMessage = {
-                        userId: currentUser,
-                        text: messageText
-                    };
-                    postMessage(newMessage).then(message => {
-                        addNewMessage(message);
-                        setMessageText("");
-                        setTimeout(() => {
-                            document.querySelector("main").scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-                        }, 5);
-                    });
+                    sendMessage(messageText);
             }
         }
+    }
+
+    function sendMessage(text, think = false) {
+        const newMessage = {
+            userId: currentUser,
+            text,
+            think
+        };
+        postMessage(newMessage).then(message => {
+            addNewMessage(message);
+            setMessageText("");
+            setTimeout(() => {
+                document.querySelector("main").scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+            }, 5);
+        });
     }
 
     function addNewMessage(message) {
@@ -63,11 +67,11 @@ function App() {
                     onChange={event => setMessageText(event.target.value)}
                     onKeyPress={event => {
                         if (event.key === "Enter") {
-                            sendMessage();
+                            onSubmit();
                         }
                     }}
                 />
-                <button className="send-button icon" onClick={sendMessage}>
+                <button className="send-button icon" onClick={onSubmit}>
                     send
                 </button>
             </div>

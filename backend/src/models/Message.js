@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const MessageSchema = new mongoose.Schema(
     {
         userId: Number,
-        text: String
+        text: String,
+        think: Boolean
     },
     { timestamps: true }
 );
