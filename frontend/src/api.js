@@ -9,3 +9,7 @@ export function getMessages() {
 export function postMessage(message) {
     return axios.post(`message`, message).then(response => response.data);
 }
+
+export function deleteLastMessage(userId) {
+    return axios.delete(`message/${userId}`).then(response => response.data);
+}

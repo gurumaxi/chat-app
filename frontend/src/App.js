@@ -1,56 +1,47 @@
 import { useState, useEffect } from "react";
 import { socket } from ".";
-import { getMessages, postMessage } from "./api";
+import { deleteLastMessage, getMessages, postMessage } from "./api";
 import { Bubble } from "./components/bubble/bubble";
 import { Header } from "./components/header/header";
 
 function App() {
-    const currentUser = 1;
+    const currentUserId = 1;
     const [messageText, setMessageText] = useState("");
     const [allMessages, setAllMessages] = useState([]);
 
     useEffect(() => {
         getMessages().then(messages => setAllMessages(messages));
+        socket.on("newMessage", message => setAllMessages(prevState => [...prevState, message]));
+        socket.on("messageRemoved", message => setAllMessages(prevState => prevState.filter(m => m._id !== message._id)));
     }, []);
-
-    socket.on("newMessage", addNewMessage);
 
     function onSubmit() {
         if (messageText.length) {
             const [firstWord, ...otherWords] = messageText.trim().split(" ");
-            switch (firstWord) {
-                case "/nick":
-                    // TODO: change nick name
-                    break;
-                case "/think":
-                    sendMessage(otherWords.join(), true);
-                    break;
-                case "/oops":
-                    // TODO: remove last message
-                    break;
-                default:
-                    sendMessage(messageText);
+            if (firstWord === "/nick") {
+                // TODO: change nick name
+            } else if (firstWord === "/think") {
+                sendMessage(otherWords.join(" "), true);
+            } else if (firstWord === "/oops") {
+                deleteLastMessage(currentUserId);
+            } else {
+                sendMessage(messageText);
             }
+            setMessageText("");
         }
     }
 
     function sendMessage(text, think = false) {
         const newMessage = {
-            userId: currentUser,
+            userId: currentUserId,
             text,
             think
         };
-        postMessage(newMessage).then(message => {
-            addNewMessage(message);
-            setMessageText("");
+        postMessage(newMessage).then(() => {
             setTimeout(() => {
                 document.querySelector("main").scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
             }, 5);
         });
-    }
-
-    function addNewMessage(message) {
-        setAllMessages([...allMessages, message]);
     }
 
     return (
@@ -58,7 +49,7 @@ function App() {
             <Header />
             <main>
                 {allMessages.map((message, index) => (
-                    <Bubble message={message} currentUser={currentUser} key={index} />
+                    <Bubble message={message} currentUserId={currentUserId} key={index} />
                 ))}
             </main>
             <div className="input-container">
