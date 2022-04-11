@@ -1,0 +1,42 @@
+version: "3.2"
+
+services:
+
+  mongo_db:
+    image: mongo:latest
+    container_name: mongo_db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+  express:
+    build: ./backend
+    container_name: express
+    command: npm run start
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=development
+      - DEBUG=nodejs-docker-express:*
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+
+  react:
+    build: ./frontend
+    container_name: react
+    command: npm run start
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./frontend:/usr/src/app
+
+volumes:
+  mongodb_data:

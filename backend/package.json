@@ -1,0 +1,14 @@
+{
+    "name": "chat-app-backend",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "start": "nodemon --legacy-watch --inspect=0.0.0.0 --experimental-specifier-resolution=node src/app.js"
+    },
+    "dependencies": {
+        "body-parser": "1.20.0",
+        "express": "4.17.3",
+        "mongoose": "6.2.10",
+        "socket.io": "4.4.1"
+    }
+}
