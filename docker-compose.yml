@@ -13,30 +13,47 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  mongo_express:
+    image: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo_db
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=root
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=1234
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=1234
+    depends_on:
+      - mongo_db
+    ports:
+      - "9000:8081"
+    volumes:
+      - mongodb_data:/data/db
+
   express:
     build: ./backend
     container_name: express
     command: npm run start
     ports:
       - "8000:8000"
+      - "8001:8001"
     environment:
       - NODE_ENV=development
       - DEBUG=nodejs-docker-express:*
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
-
-  react:
-    build: ./frontend
-    container_name: react
-    command: npm run start
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-    volumes:
-      - ./frontend:/usr/src/app
+  # react:
+  #   build: ./frontend
+  #   container_name: react
+  #   command: npm run start
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING=true
+  #   volumes:
+  #     - ./frontend:/usr/src/app
+  #     - /usr/src/app/node_modules
 
 volumes:
   mongodb_data:
