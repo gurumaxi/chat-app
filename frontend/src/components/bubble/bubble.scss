@@ -6,6 +6,10 @@
     align-items: center;
     position: relative;
 
+    &:last-child {
+        margin-bottom: 0;
+    }
+
     &.other-message {
         justify-content: flex-start;
 

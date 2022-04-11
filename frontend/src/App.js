@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Bubble } from "./components/bubble/bubble";
 import { Header } from "./components/header/header";
-import { useState } from "react";
 
 function App() {
     const currentUser = 1;
@@ -16,9 +16,25 @@ function App() {
 
     function sendMessage() {
         if (messageText.length) {
-            const newMessage = { user: 1, text: messageText };
-            setAllMessage([...allMessages, newMessage]);
-            setMessageText("");
+            const [firstWord, ...otherWords] = messageText.trim().split(" ");
+            switch (firstWord) {
+                case "/nick":
+                    // TODO: change nick name
+                    break;
+                case "/think":
+                    // TODO: change text color
+                    break;
+                case "/oops":
+                    // TODO: remove last message
+                    break;
+                default:
+                    const newMessage = { user: 1, text: messageText };
+                    setAllMessage([...allMessages, newMessage]);
+                    setMessageText("");
+                    setTimeout(() => {
+                        document.querySelector("main").scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+                    }, 5);
+            }
         }
     }
 
