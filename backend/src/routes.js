@@ -1,26 +1,23 @@
 import express from "express";
-import { Chat } from "./models/Chat";
+import { Message } from "./models/Message";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.send("Hello World");
+router.get("/message", async (req, res) => {
+    const messages = await Message.find({});
+    res.send(messages);
 });
 
-router.post("/chats", async (req, res) => {
+router.post("/message", async (req, res) => {
     try {
-        var chat = new Chat(req.body);
-        await chat.save();
-        res.sendStatus(200);
-        io.emit("chat", req.body);
+        let message = new Message(req.body);
+        await message.save();
+        res.send(message);
+        // io.emit("new-message", req.body);
     } catch (error) {
         res.sendStatus(500);
         console.error(error);
     }
-});
-
-router.get("/chats", (req, res) => {
-    Chat.find({}, (error, chats) => res.send(chats));
 });
 
 export default router;

@@ -1,20 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { socket } from ".";
+import { getMessages, postMessage } from "./api";
 import { Bubble } from "./components/bubble/bubble";
 import { Header } from "./components/header/header";
 
 function App() {
     const currentUser = 1;
-
     const [messageText, setMessageText] = useState("");
-    const [allMessages, setAllMessage] = useState([
-        { user: 1, text: "Hi user 2" },
-        { user: 2, text: "Howdy" },
-        { user: 2, text: "How are you doing?" },
-        { user: 1, text: "I am fine thanks." },
-        { user: 2, text: "Let's do something today" }
-    ]);
+    const [allMessages, setAllMessages] = useState([]);
+
+    useEffect(() => {
+        getMessages().then(messages => setAllMessages(messages));
+    }, []);
 
     function sendMessage() {
+        socket.emit("howdy", "test1234");
         if (messageText.length) {
             const [firstWord, ...otherWords] = messageText.trim().split(" ");
             switch (firstWord) {
@@ -28,14 +28,23 @@ function App() {
                     // TODO: remove last message
                     break;
                 default:
-                    const newMessage = { user: 1, text: messageText };
-                    setAllMessage([...allMessages, newMessage]);
-                    setMessageText("");
-                    setTimeout(() => {
-                        document.querySelector("main").scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-                    }, 5);
+                    const newMessage = {
+                        userId: currentUser,
+                        text: messageText
+                    };
+                    postMessage(newMessage).then(message => {
+                        addNewMessage(message);
+                        setMessageText("");
+                        setTimeout(() => {
+                            document.querySelector("main").scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+                        }, 5);
+                    });
             }
         }
+    }
+
+    function addNewMessage(message) {
+        setAllMessages([...allMessages, message]);
     }
 
     return (

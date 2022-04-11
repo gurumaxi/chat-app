@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
-export const User = mongoose.model("User", {
-    name: String
+const UserSchema = new mongoose.Schema({
+    nickname: String
 });
+
+export const User = mongoose.model("User", UserSchema);

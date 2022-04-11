@@ -1,7 +1,7 @@
 import "./bubble.scss";
 
 export function Bubble(props) {
-    const isMyMessage = props.currentUser === props.message.user;
+    const isMyMessage = props.currentUser === props.message.userId;
 
     return (
         <div className={`bubble-container ${isMyMessage ? "my-message" : "other-message"}`}>
