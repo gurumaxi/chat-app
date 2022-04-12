@@ -12,7 +12,7 @@ router.get("/user", async (req, res) => {
 
 router.post("/user", async (req, res) => {
     const _id = req.body.userId;
-    const userData = { username: req.body.username };
+    const userData = { username: req.body.username, typing: false };
     let user;
     if (_id) {
         user = await User.findOneAndUpdate({ _id }, userData, { new: true });

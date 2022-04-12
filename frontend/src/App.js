@@ -14,7 +14,9 @@ export default class App extends React.Component {
             messages: [],
             messageText: "",
             currentUserId: localStorage.getItem(LOCAL_STORAGE_USER_ID) || null,
-            username: ""
+            username: "",
+            typing: false,
+            typingTimeout: null
         };
     }
 
@@ -72,12 +74,29 @@ export default class App extends React.Component {
         saveUser(username);
     };
 
+    handleTypingEvent = () => {
+        const emitTypingEvent = typing => socket.emit("typing", { typing, userId: this.state.currentUserId });
+        !this.state.typingTimeout ? emitTypingEvent(true) : clearTimeout(this.state.typingTimeout);
+        this.state.typingTimeout = setTimeout(() => {
+            this.setState({ typingTimeout: null });
+            emitTypingEvent(false);
+        }, 500);
+    };
+
     render() {
         return (
             <div className="App">
                 {!this.state.currentUserId && <LoginModal createUser={this.createUser} />}
                 <header>
                     <h2>Chat-App</h2>
+                    <div className="chips">
+                        {this.state.users.map((user, index) => (
+                            <div className="user-chip" key={index}>
+                                <span>{user.username}</span>
+                                {user.typing && <span className="typing"> is typing...</span>}
+                            </div>
+                        ))}
+                    </div>
                 </header>
                 <main>
                     {this.state.messages.map((message, index) => (
@@ -89,6 +108,7 @@ export default class App extends React.Component {
                         value={this.state.messageText}
                         onChange={event => this.setState({ messageText: event.target.value })}
                         onKeyPress={event => {
+                            this.handleTypingEvent();
                             if (event.key === "Enter") {
                                 this.onSubmit();
                             }
