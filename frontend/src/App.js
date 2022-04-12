@@ -80,7 +80,7 @@ export default class App extends React.Component {
         this.state.typingTimeout = setTimeout(() => {
             this.setState({ typingTimeout: null });
             emitTypingEvent(false);
-        }, 500);
+        }, 1000);
     };
 
     render() {
@@ -107,8 +107,8 @@ export default class App extends React.Component {
                     <input
                         value={this.state.messageText}
                         onChange={event => this.setState({ messageText: event.target.value })}
+                        onKeyDown={this.handleTypingEvent}
                         onKeyPress={event => {
-                            this.handleTypingEvent();
                             if (event.key === "Enter") {
                                 this.onSubmit();
                             }
