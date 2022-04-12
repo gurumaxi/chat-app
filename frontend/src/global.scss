@@ -30,7 +30,7 @@ body {
     position: relative;
     font-size: 1rem;
     user-select: none;
-    background-color: #ebebeb;
+    background-color: white;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-font-smoothing: antialiased;
@@ -110,8 +110,9 @@ button {
             .user-chip {
                 padding: 3px 8px;
                 background-color: var(--secondaryColor);
-                font-size: 11px;
+                font-size: 13px;
                 border-radius: 50px;
+                flex-shrink: 0;
 
                 .typing {
                     font-style: italic;
@@ -123,10 +124,13 @@ button {
 
     main {
         width: 100%;
+        max-width: 800px;
         height: 100%;
         padding: 15px 20px;
         overflow-y: auto;
         overflow-x: hidden;
+        margin: auto;
+        background-color: #ebebeb;
     }
 
     .input-container {
@@ -134,18 +138,23 @@ button {
         height: 60px;
         background-color: var(--primaryColor);
         flex-shrink: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-        gap: 10px;
 
-        input {
-            width: 100%;
-        }
+        .inner-input-container {
+            max-width: 800px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            gap: 10px;
 
-        .send-button {
-            width: 60px;
+            input {
+                width: 100%;
+            }
+
+            .send-button {
+                width: 60px;
+            }
         }
     }
 }

@@ -129,19 +129,21 @@ export default class App extends React.Component {
                     ))}
                 </main>
                 <div className="input-container">
-                    <input
-                        value={this.state.messageText}
-                        onChange={event => this.setState({ messageText: event.target.value })}
-                        onKeyDown={this.handleTypingEvent}
-                        onKeyPress={event => {
-                            if (event.key === "Enter") {
-                                this.onSubmit();
-                            }
-                        }}
-                    />
-                    <button className="send-button icon" onClick={this.onSubmit}>
-                        send
-                    </button>
+                    <div className="inner-input-container">
+                        <input
+                            value={this.state.messageText}
+                            onChange={event => this.setState({ messageText: event.target.value })}
+                            onKeyDown={this.handleTypingEvent}
+                            onKeyPress={event => {
+                                if (event.key === "Enter") {
+                                    this.onSubmit();
+                                }
+                            }}
+                        />
+                        <button className="send-button icon" onClick={this.onSubmit}>
+                            send
+                        </button>
+                    </div>
                 </div>
             </div>
         );
