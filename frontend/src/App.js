@@ -55,8 +55,9 @@ export default class App extends React.Component {
     }
 
     onSubmit = () => {
-        if (this.state.messageText.length) {
-            const [firstWord, ...otherWords] = this.state.messageText.trim().split(" ");
+        const text = this.state.messageText.trim();
+        if (text.length) {
+            const [firstWord, ...otherWords] = text.split(" ");
             if (firstWord === "/nick" && otherWords.length) {
                 updateNickname(this.state.currentUserId, otherWords.join(" ").toLowerCase());
             } else if (firstWord === "/think") {
@@ -70,10 +71,10 @@ export default class App extends React.Component {
             } else if (firstWord === "/countdown" && otherWords.length === 2) {
                 socket.emit("countdown", { userId: this.state.currentUserId, number: Number(otherWords[0]) || 3, url: otherWords[1] });
             } else {
-                this.sendMessage(this.state.messageText);
+                this.sendMessage(text);
             }
-            this.setState({ messageText: "" });
         }
+        this.setState({ messageText: "" });
     };
 
     sendMessage = (text, think = false, highlight = false) => {
