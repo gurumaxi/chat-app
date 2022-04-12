@@ -36,9 +36,11 @@ export default class App extends React.Component {
             getUsers().then(users => {
                 this.setState({ users });
                 if (!this.state.currentUserId) {
-                    const userId = users.find(u => u.username === this.state.username)._id;
-                    this.setState({ currentUserId: userId });
-                    localStorage.setItem(LOCAL_STORAGE_USER_ID, userId);
+                    const userId = users.find(u => u.username === this.state.username)?._id;
+                    if (userId) {
+                        this.setState({ currentUserId: userId });
+                        localStorage.setItem(LOCAL_STORAGE_USER_ID, userId);
+                    }
                 }
             })
         );

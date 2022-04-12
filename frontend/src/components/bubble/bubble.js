@@ -8,6 +8,14 @@ export default class Bubble extends React.Component {
     }
 
     componentDidMount() {
+        this.setParsedText();
+    }
+
+    componentDidUpdate() {
+        this.setParsedText();
+    }
+
+    setParsedText() {
         ReactDOM.findDOMNode(this).querySelector(".text").innerHTML = this.props.message.text
             .replaceAll("(smile)", "<span>&#128512;</span>")
             .replaceAll("(wink)", "<span>&#128075;</span>")
