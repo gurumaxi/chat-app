@@ -15,6 +15,7 @@
 
         .bubble {
             background-color: var(--bubbleGrey);
+            animation-name: slide-in-left;
 
             &:before {
                 content: "";
@@ -36,6 +37,7 @@
 
         .bubble {
             background-color: var(--bubbleGreen);
+            animation-name: slide-in-right;
 
             &:before {
                 content: "";
@@ -55,6 +57,8 @@
     .bubble {
         padding: 8px;
         border-radius: 5px;
+        position: relative;
+        animation: 0.3s normal forwards ease-in-out;
 
         .username {
             font-size: 12px;
@@ -66,5 +70,23 @@
             color: #686868;
             font-style: italic;
         }
+    }
+}
+
+@keyframes slide-in-left {
+    0% {
+        left: -50px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes slide-in-right {
+    0% {
+        right: -50px;
+    }
+    100% {
+        right: 0;
     }
 }
