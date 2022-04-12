@@ -66,9 +66,17 @@
             color: var(--secondaryColor);
         }
 
-        .text.think:not(span) {
-            color: #686868;
-            font-style: italic;
+        .text {
+            &.think {
+                color: #686868;
+                font-style: italic;
+            }
+
+            &.highlight {
+                font-size: 110%;
+                background-color: rgba(0, 0, 0, 0.1);
+                padding: 0 5px;
+            }
         }
     }
 }

@@ -28,7 +28,7 @@ export default class Bubble extends React.Component {
             <div className={`bubble-container ${this.isMyMessage() ? "my-message" : "other-message"}`}>
                 <div className="bubble">
                     <div className="username">{this.getUsername()}</div>
-                    <div className={`text ${this.props.message.think ? "think" : ""}`}></div>
+                    <div className={`text ${this.props.message.think ? "think" : ""} ${this.props.message.highlight ? "highlight" : ""}`}></div>
                 </div>
             </div>
         );

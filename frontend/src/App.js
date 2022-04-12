@@ -50,6 +50,8 @@ export default class App extends React.Component {
                 saveUser(otherWords.join("_").toLowerCase(), this.state.currentUserId);
             } else if (firstWord === "/think") {
                 this.sendMessage(otherWords.join(" "), true);
+            } else if (firstWord === "/highlight") {
+                this.sendMessage(otherWords.join(" "), false, true);
             } else if (firstWord === "/oops") {
                 deleteLastMessage(this.state.currentUserId);
             } else {
@@ -59,8 +61,8 @@ export default class App extends React.Component {
         }
     };
 
-    sendMessage = (text, think = false) => {
-        const newMessage = { userId: this.state.currentUserId, text, think };
+    sendMessage = (text, think = false, highlight = false) => {
+        const newMessage = { userId: this.state.currentUserId, text, think, highlight };
         postMessage(newMessage).then(this.scrollToBottom);
     };
 

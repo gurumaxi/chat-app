@@ -4,7 +4,8 @@ const MessageSchema = new mongoose.Schema(
     {
         userId: String,
         text: String,
-        think: Boolean
+        think: Boolean,
+        highlight: Boolean
     },
     { timestamps: true }
 );
