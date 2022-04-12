@@ -25,6 +25,10 @@ io.on("connection", socket => {
         await User.findOneAndUpdate({ _id: args.userId }, { typing: args.typing });
         io.emit("userChanged");
     });
+
+    socket.on("countdown", args => {
+        io.emit("countdown", args);
+    });
 });
 
 const server = app.listen(8000, () => {

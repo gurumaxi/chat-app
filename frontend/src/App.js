@@ -3,6 +3,7 @@ import { socket } from ".";
 import { deleteLastMessage, getMessages, postMessage, getUsers, saveUser } from "./api";
 import LoginModal from "./components/loginModal/loginModal";
 import Bubble from "./components/bubble/bubble";
+import Countdown from "./components/countdown/countdown";
 
 const LOCAL_STORAGE_USER_ID = "userId";
 
@@ -15,8 +16,8 @@ export default class App extends React.Component {
             messageText: "",
             currentUserId: localStorage.getItem(LOCAL_STORAGE_USER_ID) || null,
             username: "",
-            typing: false,
-            typingTimeout: null
+            typingTimeout: null,
+            countdownData: null
         };
     }
 
@@ -36,6 +37,11 @@ export default class App extends React.Component {
                 }
             })
         );
+        socket.on("countdown", data => {
+            if (data.userId !== this.state.currentUserId) {
+                this.setState({ countdownData: data });
+            }
+        });
         getUsers().then(users => this.setState({ users }));
         getMessages().then(messages => {
             this.setState({ messages });
@@ -54,6 +60,8 @@ export default class App extends React.Component {
                 this.sendMessage(otherWords.join(" "), false, true);
             } else if (firstWord === "/oops") {
                 deleteLastMessage(this.state.currentUserId);
+            } else if (firstWord === "/countdown" && otherWords.length === 2) {
+                socket.emit("countdown", { userId: this.state.currentUserId, number: Number(otherWords[0]), url: otherWords[1] });
             } else {
                 this.sendMessage(this.state.messageText);
             }
@@ -89,6 +97,13 @@ export default class App extends React.Component {
         return (
             <div className="App">
                 {!this.state.currentUserId && <LoginModal createUser={this.createUser} />}
+                {this.state.countdownData && this.state.currentUserId && (
+                    <Countdown
+                        number={this.state.countdownData.number}
+                        url={this.state.countdownData.url}
+                        onRedirect={() => this.setState({ countdownData: null })}
+                    />
+                )}
                 <header>
                     <h2>Chat-App</h2>
                     <div className="chips">
