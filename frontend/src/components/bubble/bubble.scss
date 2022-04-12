@@ -62,7 +62,7 @@
             color: var(--secondaryColor);
         }
 
-        .text.think {
+        .text.think:not(span) {
             color: #686868;
             font-style: italic;
         }
