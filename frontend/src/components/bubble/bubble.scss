@@ -16,6 +16,7 @@
         .bubble {
             background-color: var(--bubbleGrey);
             animation-name: slide-in-left;
+            align-items: flex-start;
 
             &:before {
                 content: "";
@@ -38,6 +39,7 @@
         .bubble {
             background-color: var(--bubbleGreen);
             animation-name: slide-in-right;
+            align-items: flex-end;
 
             &:before {
                 content: "";
@@ -59,6 +61,8 @@
         border-radius: 5px;
         position: relative;
         animation: 0.3s normal forwards ease-in-out;
+        display: flex;
+        flex-direction: column;
 
         &.fade-out {
             opacity: 0.1;
@@ -68,6 +72,7 @@
             font-size: 12px;
             font-weight: 700;
             color: var(--secondaryColor);
+            margin-bottom: 4px;
         }
 
         .text {

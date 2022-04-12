@@ -11,15 +11,17 @@ router.get("/user", async (req, res) => {
 });
 
 router.post("/user", async (req, res) => {
-    const _id = req.body.userId;
-    const userData = { username: req.body.username, typing: false };
-    let user;
-    if (_id) {
-        user = await User.findOneAndUpdate({ _id }, userData, { new: true });
-    } else {
-        user = await User.create(userData);
+    let user = await User.findOne({ username: req.body.username });
+    if (!user) {
+        user = await User.create(req.body);
     }
     res.send(user);
+    io.emit("userChanged", user);
+});
+
+router.put("/user", async (req, res) => {
+    const user = await User.findOneAndUpdate({ _id: req.body.userId }, { username: req.body.username }, { new: true });
+    res.sendStatus(200);
     io.emit("userChanged", user);
 });
 
@@ -36,10 +38,9 @@ router.post("/message", async (req, res) => {
 });
 
 router.put("/fade-message", async (req, res) => {
-    Message.findOneAndUpdate({ userId: req.body.userId }, { fade: true }, { sort: { _id: -1 }, new: true }, (_, message) => {
-        res.sendStatus(200);
-        if (message) io.emit("messageChanged", message);
-    });
+    const message = await Message.findOneAndUpdate({ userId: req.body.userId }, { fade: true }, { sort: { _id: -1 }, new: true });
+    res.sendStatus(200);
+    if (message) io.emit("messageChanged", message);
 });
 
 router.delete("/message/:userId", async (req, res) => {

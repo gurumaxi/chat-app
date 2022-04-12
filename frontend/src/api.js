@@ -6,8 +6,12 @@ export function getUsers() {
     return axios.get(`user`).then(response => response.data);
 }
 
-export function saveUser(username, userId = null) {
-    return axios.post(`user`, { username, userId }).then(response => response.data);
+export function postUser(username) {
+    return axios.post(`user`, { username, typing: false });
+}
+
+export function updateNickname(userId, username) {
+    return axios.put(`user`, { userId, username });
 }
 
 export function getMessages() {
@@ -15,13 +19,13 @@ export function getMessages() {
 }
 
 export function postMessage(message) {
-    return axios.post(`message`, message).then(response => response.data);
+    return axios.post(`message`, message);
 }
 
 export function deleteLastMessage(userId) {
-    return axios.delete(`message/${userId}`).then(response => response.data);
+    return axios.delete(`message/${userId}`);
 }
 
 export function fadeLastMessage(userId) {
-    return axios.put(`fade-message`, { userId }).then(response => response.data);
+    return axios.put(`fade-message`, { userId });
 }

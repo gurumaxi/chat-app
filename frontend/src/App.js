@@ -1,6 +1,6 @@
 import React from "react";
 import { socket } from ".";
-import { deleteLastMessage, getMessages, postMessage, getUsers, saveUser, fadeLastMessage } from "./api";
+import { deleteLastMessage, getMessages, postMessage, getUsers, fadeLastMessage, updateNickname, postUser } from "./api";
 import LoginModal from "./components/loginModal/loginModal";
 import Bubble from "./components/bubble/bubble";
 import Countdown from "./components/countdown/countdown";
@@ -58,7 +58,7 @@ export default class App extends React.Component {
         if (this.state.messageText.length) {
             const [firstWord, ...otherWords] = this.state.messageText.trim().split(" ");
             if (firstWord === "/nick" && otherWords.length) {
-                saveUser(otherWords.join("_").toLowerCase(), this.state.currentUserId);
+                updateNickname(this.state.currentUserId, otherWords.join(" ").toLowerCase());
             } else if (firstWord === "/think") {
                 this.sendMessage(otherWords.join(" "), true);
             } else if (firstWord === "/highlight") {
@@ -68,7 +68,7 @@ export default class App extends React.Component {
             } else if (firstWord === "/fadelast") {
                 fadeLastMessage(this.state.currentUserId);
             } else if (firstWord === "/countdown" && otherWords.length === 2) {
-                socket.emit("countdown", { userId: this.state.currentUserId, number: Number(otherWords[0]), url: otherWords[1] });
+                socket.emit("countdown", { userId: this.state.currentUserId, number: Number(otherWords[0]) || 3, url: otherWords[1] });
             } else {
                 this.sendMessage(this.state.messageText);
             }
@@ -88,7 +88,7 @@ export default class App extends React.Component {
 
     createUser = username => {
         this.setState({ username });
-        saveUser(username);
+        postUser(username);
     };
 
     handleTypingEvent = () => {
@@ -97,7 +97,7 @@ export default class App extends React.Component {
         this.state.typingTimeout = setTimeout(() => {
             this.setState({ typingTimeout: null });
             emitTypingEvent(false);
-        }, 1000);
+        }, 500);
     };
 
     render() {

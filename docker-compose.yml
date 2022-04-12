@@ -43,18 +43,19 @@ services:
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
-  # react:
-  #   build: ./frontend
-  #   container_name: react
-  #   command: npm run start
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - NODE_ENV=development
-  #     - CHOKIDAR_USEPOLLING=true
-  #   volumes:
-  #     - ./frontend:/usr/src/app
-  #     - /usr/src/app/node_modules
+
+  react:
+    build: ./frontend
+    container_name: react
+    command: npm run start
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
 
 volumes:
   mongodb_data:
