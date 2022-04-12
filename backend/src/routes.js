@@ -13,7 +13,12 @@ router.get("/user", async (req, res) => {
 router.post("/user", async (req, res) => {
     const _id = req.body.userId;
     const userData = { username: req.body.username };
-    const user = _id ? await User.findOneAndUpdate({ _id }, userData) : await User.create(userData);
+    let user;
+    if (_id) {
+        user = await User.findOneAndUpdate({ _id }, userData, { new: true });
+    } else {
+        user = await User.create(userData);
+    }
     res.send(user);
     io.emit("userChanged", user);
 });

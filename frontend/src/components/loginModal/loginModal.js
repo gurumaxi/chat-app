@@ -4,6 +4,10 @@ import "./loginModal.scss";
 export function LoginModal(props) {
     const [name, setName] = useState("");
 
+    function startChatting() {
+        props.setUsername(name.toLowerCase());
+    }
+
     return (
         <div className="background">
             <div className="modal">
@@ -13,11 +17,11 @@ export function LoginModal(props) {
                     onChange={event => setName(event.target.value)}
                     onKeyPress={event => {
                         if (event.key === "Enter") {
-                            props.startChatting(name);
+                            startChatting();
                         }
                     }}
                 />
-                <button onClick={() => props.startChatting(name)}>Start chatting</button>
+                <button onClick={startChatting}>Start chatting</button>
             </div>
         </div>
     );

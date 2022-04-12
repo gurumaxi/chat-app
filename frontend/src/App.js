@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { socket } from ".";
 import { deleteLastMessage, getMessages, postMessage, getUsers, saveUser } from "./api";
@@ -11,39 +12,41 @@ function App() {
     const [currentUserId, setCurrentUserId] = useState(localStorage.getItem(LOCAL_STORAGE_USER_ID) || null);
     const [messageText, setMessageText] = useState("");
     const [allMessages, setAllMessages] = useState([]);
+    const [username, setUsername] = useState("");
 
     useEffect(() => {
         socket.on("newMessage", message => setAllMessages(prevState => [...prevState, message]));
         socket.on("messageRemoved", message => setAllMessages(prevState => prevState.filter(m => m._id !== message._id)));
-        socket.on("userChanged", user =>
-            setUsers(prevState => {
-                const index = prevState.find(u => u._id === user._id);
-                if (index < 0) {
-                    return [...prevState, user];
-                } else {
-                    prevState[index] = user;
-                    return prevState;
+        socket.on("userChanged", () =>
+            getUsers().then(users => {
+                setUsers(users);
+                if (!currentUserId) {
+                    const userId = users.find(u => u.username === username)._id;
+                    setCurrentUserId(userId);
+                    //localStorage.setItem(LOCAL_STORAGE_USER_ID, userId);
                 }
             })
         );
-
-        getMessages().then(messages => setAllMessages(messages));
         getUsers().then(users => setUsers(users));
+        getMessages().then(messages => {
+            setAllMessages(messages);
+            scrollToBottom(false);
+        });
     }, []);
 
-    function startChatting(username) {
-        saveUser(username).then(() => {
-            const userId = users.find(u => u.username === username)._id;
-            setCurrentUserId(userId);
-            localStorage.setItem(LOCAL_STORAGE_USER_ID, userId);
-        });
+    useEffect(() => {
+        if (username) saveUser(username);
+    }, [username]);
+
+    function startChatting(name) {
+        setUsername(name.toLowerCase());
     }
 
     function onSubmit() {
         if (messageText.length) {
             const [firstWord, ...otherWords] = messageText.trim().split(" ");
             if (firstWord === "/nick" && otherWords.length) {
-                saveUser(otherWords.join("_"), currentUserId);
+                saveUser(otherWords.join("_").toLowerCase(), currentUserId);
             } else if (firstWord === "/think") {
                 sendMessage(otherWords.join(" "), true);
             } else if (firstWord === "/oops") {
@@ -57,16 +60,17 @@ function App() {
 
     function sendMessage(text, think = false) {
         const newMessage = { userId: currentUserId, text, think };
-        postMessage(newMessage).then(() => {
-            setTimeout(() => {
-                document.querySelector("main").scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-            }, 5);
-        });
+        postMessage(newMessage).then(scrollToBottom);
+    }
+
+    function scrollToBottom(smooth = true) {
+        const main = document.querySelector("main");
+        setTimeout(() => main.scrollTo({ top: main.scrollHeight, behavior: smooth ? "smooth" : "auto" }), 5);
     }
 
     return (
         <div className="App">
-            {!currentUserId && <LoginModal startChatting={startChatting} />}
+            {!currentUserId && <LoginModal setUsername={setUsername} />}
             <header>
                 <h2>Chat-App</h2>
             </header>
