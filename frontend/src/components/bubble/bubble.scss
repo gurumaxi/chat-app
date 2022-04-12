@@ -65,7 +65,8 @@
         flex-direction: column;
 
         &.fade-out {
-            opacity: 0.1;
+            // requirement states opacity: 0.1; but this would be too much.
+            opacity: 0.3;
         }
 
         .username {
