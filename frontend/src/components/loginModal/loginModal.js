@@ -1,28 +1,35 @@
-import { useState } from "react";
+import React from "react";
 import "./loginModal.scss";
 
-export function LoginModal(props) {
-    const [name, setName] = useState("");
-
-    function startChatting() {
-        props.setUsername(name.toLowerCase());
+export default class LoginModal extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: ""
+        };
     }
 
-    return (
-        <div className="background">
-            <div className="modal">
-                <div className="modal-header">Enter your name</div>
-                <input
-                    value={name}
-                    onChange={event => setName(event.target.value)}
-                    onKeyPress={event => {
-                        if (event.key === "Enter") {
-                            startChatting();
-                        }
-                    }}
-                />
-                <button onClick={startChatting}>Start chatting</button>
+    startChatting = () => {
+        this.props.createUser(this.state.name.toLowerCase());
+    };
+
+    render() {
+        return (
+            <div className="background">
+                <div className="modal">
+                    <div className="modal-header">Enter your name</div>
+                    <input
+                        value={this.state.name}
+                        onChange={event => this.setState({ name: event.target.value })}
+                        onKeyPress={event => {
+                            if (event.key === "Enter") {
+                                this.startChatting();
+                            }
+                        }}
+                    />
+                    <button onClick={this.startChatting}>Start chatting</button>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }

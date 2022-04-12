@@ -41,7 +41,7 @@ router.post("/message", async (req, res) => {
 });
 
 router.delete("/message/:userId", async (req, res) => {
-    Message.findOneAndDelete({ userId: Number(req.params.userId) }, { sort: { _id: -1 } }, (_, message) => {
+    Message.findOneAndDelete({ userId: req.params.userId }, { sort: { _id: -1 } }, (_, message) => {
         if (message) {
             io.emit("messageRemoved", message);
         }

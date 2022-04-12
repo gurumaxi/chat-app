@@ -1,15 +1,27 @@
+import React from "react";
 import "./bubble.scss";
 
-export function Bubble(props) {
-    const isMyMessage = props.currentUserId === props.message.userId;
-    const username = props.users.find(u => u._id === props.message.userId)?.username;
+export default class Bubble extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
-    return (
-        <div className={`bubble-container ${isMyMessage ? "my-message" : "other-message"}`}>
-            <div className="bubble">
-                <div className="username">{username}</div>
-                <div className={`text ${props.message.think ? "think" : ""}`}> {props.message.text}</div>
+    isMyMessage = () => {
+        return this.props.currentUserId === this.props.message.userId;
+    };
+
+    getUsername = () => {
+        return this.props.users.find(u => u._id === this.props.message.userId)?.username;
+    };
+
+    render() {
+        return (
+            <div className={`bubble-container ${this.isMyMessage() ? "my-message" : "other-message"}`}>
+                <div className="bubble">
+                    <div className="username">{this.getUsername()}</div>
+                    <div className={`text ${this.props.message.think ? "think" : ""}`}> {this.props.message.text}</div>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
