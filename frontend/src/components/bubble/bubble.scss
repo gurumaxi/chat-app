@@ -60,6 +60,10 @@
         position: relative;
         animation: 0.3s normal forwards ease-in-out;
 
+        &.fade-out {
+            opacity: 0.1;
+        }
+
         .username {
             font-size: 12px;
             font-weight: 700;

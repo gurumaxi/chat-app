@@ -29,23 +29,23 @@ router.get("/message", async (req, res) => {
 });
 
 router.post("/message", async (req, res) => {
-    try {
-        let message = new Message(req.body);
-        await message.save();
-        res.send(message);
-        io.emit("newMessage", message);
-    } catch (error) {
-        res.sendStatus(500);
-        console.error(error);
-    }
+    let message = new Message(req.body);
+    await message.save();
+    res.send(message);
+    io.emit("newMessage", message);
+});
+
+router.put("/fade-message", async (req, res) => {
+    Message.findOneAndUpdate({ userId: req.body.userId }, { fade: true }, { sort: { _id: -1 }, new: true }, (_, message) => {
+        res.sendStatus(200);
+        if (message) io.emit("messageChanged", message);
+    });
 });
 
 router.delete("/message/:userId", async (req, res) => {
     Message.findOneAndDelete({ userId: req.params.userId }, { sort: { _id: -1 } }, (_, message) => {
-        if (message) {
-            io.emit("messageRemoved", message);
-        }
         res.sendStatus(200);
+        if (message) io.emit("messageRemoved", message);
     });
 });
 

@@ -21,3 +21,7 @@ export function postMessage(message) {
 export function deleteLastMessage(userId) {
     return axios.delete(`message/${userId}`).then(response => response.data);
 }
+
+export function fadeLastMessage(userId) {
+    return axios.put(`fade-message`, { userId }).then(response => response.data);
+}

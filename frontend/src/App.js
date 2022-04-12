@@ -1,6 +1,6 @@
 import React from "react";
 import { socket } from ".";
-import { deleteLastMessage, getMessages, postMessage, getUsers, saveUser } from "./api";
+import { deleteLastMessage, getMessages, postMessage, getUsers, saveUser, fadeLastMessage } from "./api";
 import LoginModal from "./components/loginModal/loginModal";
 import Bubble from "./components/bubble/bubble";
 import Countdown from "./components/countdown/countdown";
@@ -25,6 +25,11 @@ export default class App extends React.Component {
         socket.on("newMessage", message => {
             this.setState({ messages: [...this.state.messages, message] });
             this.scrollToBottom();
+        });
+        socket.on("messageChanged", message => {
+            const index = this.state.messages.findIndex(m => m._id === message._id);
+            this.state.messages[index] = message;
+            this.setState({ messages: this.state.messages });
         });
         socket.on("messageRemoved", message => this.setState({ messages: this.state.messages.filter(m => m._id !== message._id) }));
         socket.on("userChanged", () =>
@@ -60,6 +65,8 @@ export default class App extends React.Component {
                 this.sendMessage(otherWords.join(" "), false, true);
             } else if (firstWord === "/oops") {
                 deleteLastMessage(this.state.currentUserId);
+            } else if (firstWord === "/fadelast") {
+                fadeLastMessage(this.state.currentUserId);
             } else if (firstWord === "/countdown" && otherWords.length === 2) {
                 socket.emit("countdown", { userId: this.state.currentUserId, number: Number(otherWords[0]), url: otherWords[1] });
             } else {
@@ -70,7 +77,7 @@ export default class App extends React.Component {
     };
 
     sendMessage = (text, think = false, highlight = false) => {
-        const newMessage = { userId: this.state.currentUserId, text, think, highlight };
+        const newMessage = { userId: this.state.currentUserId, text, think, highlight, fade: false };
         postMessage(newMessage).then(this.scrollToBottom);
     };
 

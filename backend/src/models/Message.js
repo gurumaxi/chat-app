@@ -5,7 +5,8 @@ const MessageSchema = new mongoose.Schema(
         userId: String,
         text: String,
         think: Boolean,
-        highlight: Boolean
+        highlight: Boolean,
+        fade: Boolean
     },
     { timestamps: true }
 );
